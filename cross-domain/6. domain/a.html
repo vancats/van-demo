@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  hello a
+  <iframe src="http://b.test.com:3000/b.html" frameborder="0" id="iframe" onload="load()"></iframe>
+
+  <script>
+    document.domain = 'test.com'
+    function load() {
+      console.log(iframe.contentWindow.a)
+    }
+  </script>
+</body>
+
+</html>

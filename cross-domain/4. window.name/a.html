@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  要求：a b 同域，c 不同域，a 获取 c 的数据
+  操作：a 引用 c，c 把值放在 window.name，把 c 的引用地址改为 b，就会重新加载 iframe，同域可获取 window.name
+
+  <iframe src="http://localhost:4000/c.html" frameborder="0" id="iframe" onload="load()"></iframe>
+  <script>
+    let first = true
+    function load() {
+      if (first) {
+        let iframe = document.querySelector('#iframe')
+        iframe.src = 'http://localhost: 3000/b.html'
+        first = false
+      } else {
+        console.log(iframe.contentWindow.name)
+      }
+    }
+  </script>
+</body>
+
+</html>

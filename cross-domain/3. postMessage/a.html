@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  1. 需要在 onload 时调用方法
+  2. 获取 iframe 的 window 属性并调用 postMessage，第一个值是数据，第二个值是去向
+  3. 用 onmessage 接受返回的信息
+
+  <iframe src="http://localhost:4000/b.html" frameborder="0" id="iframe" onload="load()"></iframe>
+  <script>
+    function load() {
+      let iframe = document.querySelector('#iframe')
+      iframe.contentWindow.postMessage('vancats', 'http://localhost:4000')
+      window.onmessage = (e) => {
+        console.log('data: ', e.data)
+      }
+    }
+  </script>
+</body>
+
+</html>

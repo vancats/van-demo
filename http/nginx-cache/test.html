@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div>This is content, and data is: <span id="data"></span></div>
+  <button>click</button>
+  <script>
+    let ind = 0
+    function sendRequest() {
+      fetch('/data', {
+        headers: {
+          'X-Test-Cache': ind++
+        }
+      }).then(function (res) {
+        return res.text()
+      }).then(function (text) {
+        document.querySelector('#data').innerText = text
+      })
+    }
+    document.querySelector('button').addEventListener('click', sendRequest)
+  </script>
+</body>
+
+</html>
