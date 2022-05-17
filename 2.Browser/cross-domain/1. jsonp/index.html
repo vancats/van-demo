@@ -16,7 +16,7 @@
         let script = document.createElement('script')
         window[cb] = function (data) {
           console.log(data)
-          // document.body.removeChild(script)
+          document.body.removeChild(script)
         }
         params = { ...params, cb }
         let arr = []
