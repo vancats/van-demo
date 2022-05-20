@@ -468,7 +468,93 @@ class LazyMan {
   }
 }
 
-
-
 // 8. 并行 Promise
+class Scheduler {
+  constructor(limit) {
+    this.queue = []
+    this.maxCount = limit
+    this.runCounts = 0
+  }
 
+  add(time, order) {
+    const promiseCreator = () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          console.log(order)
+          resolve()
+        }, time)
+      })
+    }
+    this.queue.push(promiseCreator)
+  }
+
+  taskStart() {
+    for (let i = 0; i < this.maxCount; i++) {
+      this.request()
+    }
+  }
+
+  request() {
+    if (!this.queue || !this.queue.length || this.runCounts >= this.maxCount)
+      return
+    this.runCounts++
+    const task = this.queue.shift()
+    task().then(() => {
+      this.runCounts--
+      this.request()
+    })
+  }
+}
+
+// ? 测试用例
+const scheduler = new Scheduler(2)
+const addTask = (time, order) => {
+  scheduler.add(time, order)
+}
+addTask(1000, "1")
+addTask(500, "2")
+addTask(300, "3")
+addTask(400, "4")
+scheduler.taskStart()
+
+
+
+// 9. 依次输出任务并按顺序放入数组
+function mergePromise(promises) {
+  const data = []
+  let promise = Promise.resolve()
+  promises.forEach(item => {
+    promise = promise.then(item).then((res) => {
+      data.push(res)
+      return data
+    })
+  })
+  return promise
+}
+
+// ? 测试用例
+const time = (timer) => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, timer)
+  })
+}
+const ajax1 = () => time(2000).then(() => {
+  console.log(1)
+  return 1
+})
+const ajax2 = () => time(1000).then(() => {
+  console.log(2)
+  return 2
+})
+const ajax3 = () => time(1000).then(() => {
+  console.log(3)
+  return 3
+})
+
+
+mergePromise([ajax1, ajax2, ajax3]).then(data => {
+  console.log("done")
+  console.log(data) // data 为 [1, 2, 3]
+})
