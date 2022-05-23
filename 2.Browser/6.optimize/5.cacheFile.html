@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CacheFile</title>
+</head>
+
+<body>
+  <script>
+    function cacheFile(url) {
+      let fileContent = localStorage.getItem(url)
+      if (fileContent) {
+        eval(fileContent)
+      } else {
+        let xhr = new XMLHttpRequest()
+        xhr.open('GET', url, true)
+        xhr.onload = function () {
+          let responseText = xhr.responseText
+          eval(responseText)
+          localStorage.setItem(url, responseText)
+        }
+        xhr.send()
+      }
+    }
+
+    cacheFile('./index.js')
+  </script>
+</body>
+
+</html>

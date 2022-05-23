@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance</title>
+</head>
+
+<body>
+  <div style="background: red; width: 100px; height: 100px"></div>
+  <h1 elementtiming="meaningful">vancats</h1>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      let s = 0
+      for (let i = 0; i < 100000000; i++) {
+        s += i
+      }
+      console.log(s)
+      setTimeout(() => {
+        document.body.appendChild(document.createTextNode('hello'))
+      }, 1000)
+    })
+
+
+    setTimeout(() => {
+      const {
+        fetchStart,               // 开始访问
+        requestStart,             // 请求开始
+        responseStart,            // 响应开始
+        responseEnd,              // 响应结束
+        domInteractive,           // DOM可交互时间
+        domContentLoadedEventEnd, // DOM加载完毕 + DOMContentLoaded 内需要完成事件的时间
+        loadEventStart,           // 所有资源加载完毕
+      } = performance.timing
+      console.log('performance: ', performance.timing)
+      const TTFB = responseStart - requestStart         // 首字节返回的时间（服务器的处理能力 Time To First Byte
+      const TTI = domInteractive - fetchStart           // 从开始访问到可交互的时长 Time To Interactive
+      const DCL = domContentLoadedEventEnd - fetchStart // DOM 整个加载完毕 DOMContentLoaded
+      const L = loadEventStart - fetchStart             // 所有资源加载完毕所用时长 onLoad
+      console.log(TTFB, TTI, DCL, L)
+
+      const paint = performance.getEntriesByType('paint')
+      console.log('paint: ', paint)
+      console.log(paint[0].startTime)       // FP 画像素 First Paint
+      console.log(paint[1].startTime)       // FCP 有内容 First Contentful Paint
+    }, 3000)
+
+    // FMP First Meaningful Paint
+    new PerformanceObserver((entryList, observer) => {
+      console.log('entryList: ', entryList.getEntries()[0])
+
+      observer.disconnect() // 监控完后直接结束
+    }).observe({ entryTypes: ['element'] })
+
+    // LCP Largest Contentful Paint
+    new PerformanceObserver((entryList, observer) => {
+      entryList = entryList.getEntries()
+      console.log('entryList: ', entryList[entryList.length - 1])
+
+      observer.disconnect() // 监控完后直接结束
+    }).observe({ entryTypes: ['largest-contentful-paint'] })
+
+    // FID First Input Delay
+    new PerformanceObserver((entryList, observer) => {
+      firstInput = entryList.getEntries()[0]
+      if (!firstInput) return
+      // 处理开始到真正开始
+      const FID = firstInput.processingStart - firstInput.startTime
+      console.log('FID: ', FID)
+      observer.disconnect() // 监控完后直接结束
+    }).observe({ type: ['first-input'], buffered: true })
+  </script>
+</body>
+
+</html>
