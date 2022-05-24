@@ -10,21 +10,39 @@
 
 <body>
   <script>
-    let request = window.indexedDB.open('myDatabase')
+    // 参数1位数据库名，参数2为版本号
+    const request = window.indexedDB.open('myDatabase', 1)
     request.onsuccess = function (event) {
+      // 此处就可以获取到db实例
       let db = event.target.result
-      let ts = db.transaction(['student'], 'readwrite')
-      ts.objectStore('student').add({ name: 'vancats' })
-      let r = ts.objectStore('student').get(5)
-      r.onsuccess = function (e) {
+      // 创建事务，指定表格名称和读写权限
+      let transaction = db.transaction(['student'], 'readwrite')
+      // 拿到Object Store对象并写入数据
+      transaction.objectStore('student').add({ name: 'vancats' })
+      let res = transaction.objectStore('student').get(5)
+      res.onsuccess = function (e) {
         console.log(e.target.result)
       }
+
+      // 操作成功时的监听函数
+      transaction.oncomplete = function (event) {
+        console.log("操作成功")
+      }
+      // 操作失败时的监听函数
+      transaction.onerror = function (event) {
+        console.log("这里有一个Error")
+      }
+    }
+
+    // 使用IndexedDB失败时的监听函数
+    request.onerror = function (e) {
+      console.log('无法使用IndexDB')
     }
 
     request.onupgradeneeded = function (e) {
       let db = event.target.result
-      if (!db.objectStoreNames.contains('student')) {
-        let store = db.createObjectStore('student', { autoIncrement: true })
+      if (!db.objectStoreNames.contains('test')) {
+        let store = db.createObjectStore('test', { keyPath: 'id' })
       }
     }
   </script>
