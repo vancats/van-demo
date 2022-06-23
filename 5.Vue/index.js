@@ -4,6 +4,7 @@ const v_if = compiler.compile(`
   <p v-if="false">测试</p>
 </div>
 `)
+console.log('----v-if----')
 console.log(v_if.render)
 // with (this) {
 //   return _c('div', { attrs: { "id": "test" } }, [
@@ -16,6 +17,7 @@ const v_show = compiler.compile(`
   <p v-show="false">测试</p>
 </div>
 `)
+console.log('----v-show----')
 console.log(v_show.render)
 // with (this) {
 //   return _c('div', { attrs: { "id": "test" } }, [
@@ -33,6 +35,7 @@ const v_for_if = compiler.compile(`
   </ul>
 </div>
 `)
+console.log('----v-for----')
 console.log(v_for_if.render)
 // with (this) {
 //   return _c('div', { attrs: { "id": "test" } }, [
@@ -48,6 +51,7 @@ const v_html = compiler.compile(`
   <p v-html="'<div>23231213{{title}}<div>'">123</p>
 </div>
 `)
+console.log('----v-html----')
 console.log(v_html.render)
 // with (this) {
 //   return _c('div', { attrs: { "id": "test" } }, [
@@ -63,11 +67,34 @@ const v_text = compiler.compile(`
   <p v-text="'<div>23231213{{title}}<div>'">123</p>
 </div>
 `)
+console.log('----v-text----')
 console.log(v_text.render)
 // with (this) {
 //   return _c('div', { attrs: { "id": "test" } }, [
 //     _c('p', {
 //       domProps: { "textContent": _s('<div>23231213{{title}}<div>') }
 //     }, [_v("123")])
+//   ])
+// }
+
+const v_model = compiler.compile(`
+<div id="test">
+  <input type="checkbox" v-model="msg" />
+</div>
+`)
+console.log('----v-model----')
+console.log(v_model.render)
+// with (this) {
+//   return _c('div', { attrs: { "id": "test" } }, [
+//     _c('input', {
+//       directives: [{ name: "model", rawName: "v-model", value: (msg), expression: "msg" }],
+//       domProps: { "value": (msg) },
+//       on: {
+//         "input": function ($event) {
+//           if ($event.target.composing) return
+//           msg = $event.target.value
+//         }
+//       }
+//     })
 //   ])
 // }
