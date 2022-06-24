@@ -98,3 +98,22 @@ console.log(v_model.render)
 //     })
 //   ])
 // }
+
+const v_on = compiler.compile(`
+<div>
+  <div @click="add"></div>
+  <comp @click="add" @click.native="remove"></comp>
+</div>
+`)
+console.log('----v-on----')
+console.log(v_on.render)
+// with (this) {
+//   return _c('div', [
+//     _c('div', {
+//       on: { "click": add }
+//     }), _v(" "),
+//     _c('comp', {
+//       on: { "click": add },
+//       nativeOn: { "click": function ($event) { return remove.apply(null, arguments) } }
+//     })], 1)
+// }
