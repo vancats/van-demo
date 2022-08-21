@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html {
+      font-size: 160px;
+    }
+
+    .half_circle_box {
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .half_circle {
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      clip: rect(0, 0.5rem, 1rem, 0);
+      border-radius: 50%;
+      box-sizing: border-box;
+      /* 这个属性是盒子模型的类型可以让border的宽度算入盒子的宽度 */
+      border: 0.08rem solid red;
+      transform: rotate(calc(1deg * var(--deg)));
+    }
+
+    .half_circle_another {
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      clip: rect(0, 1rem, 1rem, 0.5rem);
+      border-radius: 50%;
+      box-sizing: border-box;
+      /* 这个属性是盒子模型的类型可以让border的宽度算入盒子的宽度 */
+      border: 0.08rem solid red;
+      /* transform: rotate(60deg); */
+      transform: rotate(calc(1deg * var(--deg)));
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div v-cloak id="app">
+    <div style="position: relative;width: 1rem;height:1rem;">
+      <div :style="circleDeg > 180 ? '' : 'clip: rect(0, 1rem, 1rem, 0.5rem);'" class="half_circle_box">
+        <div class="half_circle" :style="{'--deg':circleDeg > 180 ? 180 : circleDeg}"></div>
+        <div v-if="circleDeg > 180" :style="{'--deg':circleDeg - 180}" class="half_circle_another"></div>
+      </div>
+    </div>
+    角度：<input v-model="deg" type="number" />
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script>
+    // eslint-disable-next-line no-new, no-undef
+    new Vue({
+      el: '#app',
+      filters: {
+        toFixed2(num) {
+          return (num * 100).toFixed(2)
+        },
+      },
+      data() {
+        return {
+          deg: 45,
+        }
+      },
+      computed: {
+        circleDeg() {
+          // 可能有负的度数
+          return Math.abs(this.deg) % 360
+        },
+      },
+    })
+  </script>
+</body>
+
+</html>
